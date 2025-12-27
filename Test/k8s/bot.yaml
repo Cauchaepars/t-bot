@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: ghcr.io/cauchaepars/t-bot/bot:main
+          imagePullPolicy: Always
+          env:
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot-secret
+                  key: TELEGRAM_BOT_TOKEN
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
