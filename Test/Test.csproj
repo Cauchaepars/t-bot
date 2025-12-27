@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <None Include=".github\workflows\ci.yml" />
-    <None Include=".github\workflows\docker-bot.yml" />
   </ItemGroup>
 
 </Project>
