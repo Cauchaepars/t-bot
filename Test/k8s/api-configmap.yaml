@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  Swagger__Enabled: "true"
+
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_NAME: "musicdb"
+  DB_USER: "musicuser"

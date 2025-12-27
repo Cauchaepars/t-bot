@@ -25,23 +25,63 @@ spec:
     spec:
       containers:
         - name: api
-          image: test-api:local
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/cauchaepars/t-bot/api:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
             - name: ASPNETCORE_URLS
               value: "http://+:8080"
+
             - name: ASPNETCORE_ENVIRONMENT
-              value: "Development"
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: ASPNETCORE_ENVIRONMENT
+
+            - name: Swagger__Enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: Swagger__Enabled
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: DB_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: DB_PASSWORD
+
             - name: ConnectionStrings__Default
-              value: "Host=postgres;Port=5432;Database=musicdb;Username=musicuser;Password=musicpass"
+              value: "Host=$(DB_HOST);Port=$(DB_PORT);Database=$(DB_NAME);Username=$(DB_USER);Password=$(DB_PASSWORD)"
+
           readinessProbe:
             httpGet:
               path: /Initial/health
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /Initial/health
