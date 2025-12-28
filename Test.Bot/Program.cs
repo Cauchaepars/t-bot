@@ -27,9 +27,8 @@ botClient.StartReceiving(
 var me = await botClient.GetMe(cts.Token);
 Console.WriteLine($"Bot started: @{me.Username} ({me.Id})");
 Console.WriteLine("Press Enter to stop.");
-Console.ReadLine();
+await Task.Delay(Timeout.Infinite, cts.Token);
 
-cts.Cancel();
 
 async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken ct)
 {
