@@ -1,19 +1,11 @@
-# ---------- BUILD ----------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY HolidayBot.csproj .
-RUN dotnet restore
-
 COPY . .
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet restore HolidayBot/HolidayBot.csproj
+RUN dotnet publish HolidayBot/HolidayBot.csproj -c Release -o /app/publish
 
-# ---------- RUNTIME ----------
 FROM mcr.microsoft.com/dotnet/runtime:10.0
 WORKDIR /app
-
 COPY --from=build /app/publish .
-
-ENV DOTNET_EnableDiagnostics=0
-
 ENTRYPOINT ["dotnet", "HolidayBot.dll"]
