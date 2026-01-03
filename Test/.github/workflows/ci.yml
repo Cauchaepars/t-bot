@@ -56,8 +56,8 @@ jobs:
       - name: Build and push (api)
         uses: docker/build-push-action@v6
         with:
-          context: ./Test
-          file: ./Test/Dockerfile
+          context: ./Api
+          file: ./Api/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -88,8 +88,8 @@ jobs:
       - name: Build and push (bot)
         uses: docker/build-push-action@v6
         with:
-          context: ./Test.Bot
-          file: ./Test.Bot/Dockerfile
+          context: ./HolidayBot
+          file: ./HolidayBot/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

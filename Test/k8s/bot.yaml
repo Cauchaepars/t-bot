@@ -13,6 +13,8 @@ spec:
         app: bot
     spec:
       containers:
+        - name: API_BASE_URL
+          value: "http://api"
         - name: bot
           image: ghcr.io/cauchaepars/t-bot/bot:main
           imagePullPolicy: Always

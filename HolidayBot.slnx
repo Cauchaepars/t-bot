@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Application/Application.csproj" Id="79e4f535-9ec1-44a3-ba3d-5ba9b3ec695d" />
+    <Project Path="Domain/Domain.csproj" Id="badab431-200d-452a-b103-5855e27ed80a" />
+    <Project Path="Infrastructure/Infrastructure.csproj" Id="efacc681-7e24-45d3-9831-1a2344b3c451" />
+  </Folder>
+  <Project Path="Test.Bot/HolidayBot.csproj" Id="92a97773-5181-40cb-b2ba-099d153e91e4" />
+  <Project Path="Test/Api.csproj" />
+</Solution>

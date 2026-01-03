@@ -1,4 +1,6 @@
-﻿using Telegram.Bot;
+﻿using Application.Users.Commands.CreateUser;
+using System.Net.Http.Json;
+using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -41,13 +43,36 @@ async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, Cancellation
 
 	if (text.StartsWith("/start", StringComparison.OrdinalIgnoreCase))
 	{
-		var firstName = msg.From?.FirstName ?? "друг";
+		var apiBaseUrl = Environment.GetEnvironmentVariable("API_BASE_URL") ?? "http://localhost:8080";
+
+		using var http = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
+
+		var payload = new
+		{
+			telegramUserId = msg.From!.Id,
+			username = msg.From.Username,
+			firstName = msg.From.FirstName,
+			lastName = msg.From.LastName
+		};
+
+		var res = await http.PostAsJsonAsync("/users", payload, ct);
+
+		if (!res.IsSuccessStatusCode)
+		{
+			var body = await res.Content.ReadAsStringAsync(ct);
+			await bot.SendMessage(msg.Chat.Id, $"Ошибка регистрации 😢\n{body}", cancellationToken: ct);
+			return;
+		}
+
+		var data = await res.Content.ReadFromJsonAsync<CreateUserResult>(cancellationToken: ct);
+
 		await bot.SendMessage(
-			chatId: msg.Chat.Id,
-			text: $"Привет, {firstName}! 🎁\nЯ бот-квест на день рождения.\nКогда придёт время, я пришлю вопросы 😉",
+			msg.Chat.Id,
+			data?.Created == true
+				? "Ты зарегистрирован 🎉!"
+				: "С возвращением 🙂 Ты уже зарегистрирован.",
 			cancellationToken: ct
 		);
-		return;
 	}
 
 	await bot.SendMessage(

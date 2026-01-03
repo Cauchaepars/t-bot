@@ -1,15 +1,16 @@
+using Autofac.Core;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -18,6 +19,11 @@ if (app.Environment.IsDevelopment())
 		options.DocumentPath = "openapi/v1.json";
 	});
 }
+
+var cs = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(cs));
+builder.Services.AddMediatR(cfg =>
+	cfg.RegisterServicesFromAssembly(typeof(Application.Users.Commands.CreateUser.CreateUserCommand).Assembly));
 
 //app.UseHttpsRedirection();
 
