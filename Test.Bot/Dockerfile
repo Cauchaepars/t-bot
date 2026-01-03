@@ -2,8 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY . .
-RUN dotnet restore HolidayBot/HolidayBot.csproj
-RUN dotnet publish HolidayBot/HolidayBot.csproj -c Release -o /app/publish
+RUN dotnet restore HolidayBot.csproj
+RUN dotnet publish HolidayBot.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/runtime:10.0
 WORKDIR /app
